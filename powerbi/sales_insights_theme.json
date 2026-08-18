@@ -1,0 +1,96 @@
+{
+  "name": "Voltix Insights — Executive Dark Theme",
+  "dataColors": [
+    "#38BDF8",
+    "#10B981",
+    "#818CF8",
+    "#F59E0B",
+    "#EC4899",
+    "#06B6D4",
+    "#F97316",
+    "#A855F7",
+    "#64748B"
+  ],
+  "background": "#0B0F19",
+  "foreground": "#F8FAFC",
+  "tableAccent": "#38BDF8",
+  "good": "#10B981",
+  "neutral": "#F59E0B",
+  "bad": "#EF4444",
+  "maximum": "#10B981",
+  "center": "#F59E0B",
+  "minimum": "#EF4444",
+  "null": "#64748B",
+  "textClasses": {
+    "callout": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 24,
+      "color": "#F8FAFC"
+    },
+    "title": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 14,
+      "color": "#F1F5F9"
+    },
+    "header": {
+      "fontFace": "Segoe UI",
+      "fontSize": 12,
+      "color": "#94A3B8"
+    },
+    "label": {
+      "fontFace": "Segoe UI",
+      "fontSize": 10,
+      "color": "#94A3B8"
+    }
+  },
+  "visualStyles": {
+    "page": {
+      "*": {
+        "background": [
+          {
+            "color": { "solid": { "color": "#0B0F19" } },
+            "transparency": 0
+          }
+        ]
+      }
+    },
+    "*": {
+      "*": {
+        "background": [
+          {
+            "color": { "solid": { "color": "#131C2E" } },
+            "transparency": 0
+          }
+        ],
+        "border": [
+          {
+            "show": true,
+            "color": { "solid": { "color": "#1E293B" } },
+            "radius": 10
+          }
+        ],
+        "dropShadow": [
+          {
+            "show": true,
+            "color": { "solid": { "color": "#000000" } },
+            "position": "Outer",
+            "preset": "Custom",
+            "transparency": 70,
+            "blur": 8,
+            "angle": 90,
+            "distance": 4
+          }
+        ],
+        "title": [
+          {
+            "show": true,
+            "fontColor": { "solid": { "color": "#F8FAFC" } },
+            "fontSize": 13,
+            "fontFamily": "Segoe UI Semibold",
+            "alignment": "Left"
+          }
+        ]
+      }
+    }
+  }
+}

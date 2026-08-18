@@ -1,0 +1,193 @@
+/* ==============================================================================
+   VOLTIX INSIGHTS — 360° RETAIL DAX MEASURE LIBRARY
+   Project: End-to-End Retail Sales & Profitability Intelligence
+   Author: Data Analytics Portfolio
+   ============================================================================== */
+
+/* ------------------------------------------------------------------------------
+   1. CORE BUSINESS KPIS
+   ------------------------------------------------------------------------------ */
+
+Total Sales = 
+SUM(Sales[sales_amount])
+
+Total Profit = 
+SUM(Sales[profit])
+
+Total Cost = 
+SUM(Sales[cost_amount])
+
+Total Orders = 
+DISTINCTCOUNT(Sales[order_id])
+
+Units Sold = 
+SUM(Sales[quantity])
+
+Average Order Value = 
+DIVIDE([Total Sales], [Total Orders], 0)
+
+Profit Margin % = 
+DIVIDE([Total Profit], [Total Sales], 0)
+
+Average Discount % = 
+AVERAGE(Sales[discount_pct])
+
+Gross Sales = 
+SUM(Sales[gross_sales_before_discount])
+
+Total Discount Given = 
+SUM(Sales[discount_amount])
+
+
+/* ------------------------------------------------------------------------------
+   2. TIME INTELLIGENCE (YoY & MoM)
+   Requires active relationship: Date[Date] (1) -> Sales[order_date] (*)
+   ------------------------------------------------------------------------------ */
+
+-- Year-over-Year (YoY)
+Sales LY = 
+CALCULATE(
+    [Total Sales],
+    SAMEPERIODLASTYEAR('Date'[Date])
+)
+
+Sales YoY % = 
+DIVIDE([Total Sales] - [Sales LY], [Sales LY], 0)
+
+Sales YoY Delta = 
+[Total Sales] - [Sales LY]
+
+Profit LY = 
+CALCULATE(
+    [Total Profit],
+    SAMEPERIODLASTYEAR('Date'[Date])
+)
+
+Profit YoY % = 
+DIVIDE([Total Profit] - [Profit LY], [Profit LY], 0)
+
+-- Month-over-Month (MoM)
+Sales LM = 
+CALCULATE(
+    [Total Sales],
+    DATEADD('Date'[Date], -1, MONTH)
+)
+
+Sales MoM % = 
+DIVIDE([Total Sales] - [Sales LM], [Sales LM], 0)
+
+Profit LM = 
+CALCULATE(
+    [Total Profit],
+    DATEADD('Date'[Date], -1, MONTH)
+)
+
+Profit MoM % = 
+DIVIDE([Total Profit] - [Profit LM], [Profit LM], 0)
+
+-- Year-to-Date (YTD)
+Sales YTD = 
+TOTALYTD([Total Sales], 'Date'[Date])
+
+Profit YTD = 
+TOTALYTD([Total Profit], 'Date'[Date])
+
+
+/* ------------------------------------------------------------------------------
+   3. EXECUTIVE KPI FORMATTED STRINGS (WITH TREND BADGES)
+   Use for Multi-Row Cards and Callout Subtitles
+   ------------------------------------------------------------------------------ */
+
+Sales KPI Subtitle = 
+VAR YoY = [Sales YoY %]
+RETURN
+    IF(
+        ISBLANK([Sales LY]),
+        "Base Year (No LY Data)",
+        IF(
+            YoY >= 0,
+            "▲ +" & FORMAT(YoY, "0.0%") & " vs LY (₹" & FORMAT([Sales YoY Delta], "₹#,##0,,.0M") & ")",
+            "▼ " & FORMAT(YoY, "0.0%") & " vs LY (₹" & FORMAT([Sales YoY Delta], "₹#,##0,,.0M") & ")"
+        )
+    )
+
+Profit KPI Subtitle = 
+VAR YoY = [Profit YoY %]
+VAR Delta = [Total Profit] - [Profit LY]
+RETURN
+    IF(
+        ISBLANK([Profit LY]),
+        "Base Year (No LY Data)",
+        IF(
+            YoY >= 0,
+            "▲ +" & FORMAT(YoY, "0.0%") & " vs LY",
+            "▼ " & FORMAT(YoY, "0.0%") & " vs LY"
+        )
+    )
+
+Margin Health Badge = 
+SWITCH(
+    TRUE(),
+    [Profit Margin %] >= 0.25, "🟢 Premium Margin (" & FORMAT([Profit Margin %], "0.0%") & ")",
+    [Profit Margin %] >= 0.18, "🟡 Healthy Margin (" & FORMAT([Profit Margin %], "0.0%") & ")",
+    "🔴 At Risk (<18%): " & FORMAT([Profit Margin %], "0.0%")
+)
+
+
+/* ------------------------------------------------------------------------------
+   4. CONDITIONAL FORMATTING & DYNAMIC COLOR CODES
+   Apply to Visual Elements -> FX -> Field Value
+   ------------------------------------------------------------------------------ */
+
+Color_YoY_Sales = 
+IF([Sales YoY %] >= 0, "#10B981", "#EF4444")
+
+Color_Margin_Status = 
+SWITCH(
+    TRUE(),
+    [Profit Margin %] >= 0.25, "#10B981",  -- Emerald Green
+    [Profit Margin %] >= 0.18, "#F59E0B",  -- Amber Yellow
+    "#EF4444"                             -- Crimson Red
+)
+
+
+/* ------------------------------------------------------------------------------
+   5. DYNAMIC METRIC SWITCHER (PARAMETER DAX)
+   Create a disconnected table named 'Metric_Parameter' with values:
+   "Sales", "Profit", "Orders", "Profit Margin"
+   ------------------------------------------------------------------------------ */
+
+Selected Metric Value = 
+SWITCH(
+    SELECTEDVALUE('Metric_Parameter'[Metric Name], "Sales"),
+    "Sales", [Total Sales],
+    "Profit", [Total Profit],
+    "Orders", [Total Orders],
+    "Profit Margin", [Profit Margin %],
+    [Total Sales]
+)
+
+
+/* ------------------------------------------------------------------------------
+   6. ENTERPRISE DATE TABLE GENERATOR (DAX Calculated Table)
+   Modeling -> New Table
+   ------------------------------------------------------------------------------ */
+
+Date = 
+VAR MinDate = MIN(Sales[order_date])
+VAR MaxDate = MAX(Sales[order_date])
+RETURN
+ADDCOLUMNS(
+    CALENDAR(MinDate, MaxDate),
+    "Year", YEAR([Date]),
+    "Year Month Key", (YEAR([Date]) * 100) + MONTH([Date]),
+    "Year Month", FORMAT([Date], "YYYY-MM"),
+    "Month Name", FORMAT([Date], "MMMM"),
+    "Month Short", FORMAT([Date], "MMM"),
+    "Month Number", MONTH([Date]),
+    "Quarter", "Q" & FORMAT([Date], "Q"),
+    "Quarter Year", "Q" & FORMAT([Date], "Q") & " " & YEAR([Date]),
+    "Day of Week", FORMAT([Date], "dddd"),
+    "Day Number of Week", WEEKDAY([Date], 2), -- Monday = 1
+    "Is Weekend", IF(WEEKDAY([Date], 2) >= 6, "Weekend", "Weekday")
+)

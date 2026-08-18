@@ -1,0 +1,26 @@
+column,type,description
+order_id,string,Unique order ID
+order_date,date,Order date
+customer_id,string,Customer ID
+state,string,State
+city,string,City
+region,string,Sales region
+channel,string,Online or Store
+category,string,Product category
+product,string,Product
+quantity,integer,Units sold
+unit_price,decimal,Unit list price
+discount_pct,decimal,Discount fraction
+unit_cost,decimal,Unit cost
+sales_amount,decimal,Net sales
+cost_amount,decimal,Product cost
+profit,decimal,Sales minus cost
+payment_mode,string,Payment method
+year,integer,Year
+month_num,integer,Month number
+month,string,Month name
+quarter,string,Quarter
+year_month,string,YYYY-MM
+gross_sales_before_discount,decimal,Quantity × unit price
+discount_amount,decimal,Discount amount
+profit_margin,decimal,Profit / sales

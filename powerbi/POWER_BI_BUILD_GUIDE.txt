@@ -1,0 +1,89 @@
+================================================================================
+POWER BI BUILD GUIDE — VOLTIX INSIGHTS EXECUTIVE DASHBOARD
+Theme: Modern Executive Dark Slate & Electric Cyan/Emerald
+Data Source: data/processed/sales_transactions_clean.csv
+Theme File: powerbi/sales_insights_theme.json
+DAX Measures: powerbi/DAX_measures.txt
+================================================================================
+
+--------------------------------------------------------------------------------
+PHASE 1: LOAD & CONFIGURE ENVIRONMENT
+--------------------------------------------------------------------------------
+1. In Power BI Desktop, click 'Get Data' -> 'Text/CSV'.
+2. Select 'data/processed/sales_transactions_clean.csv' and load. Rename table to 'Sales'.
+3. Import Custom Theme:
+   - Go to 'View' tab -> Themes dropdown -> 'Browse for themes...'.
+   - Select 'powerbi/sales_insights_theme.json'.
+   - This instantly applies dark slate canvas (#0B0F19), glassmorphic cards (#131C2E),
+     rounded borders (10px), drop shadows, and executive color palettes.
+4. Create Date Dimension:
+   - Modeling tab -> New Table -> Paste 'Date' table DAX from DAX_measures.txt.
+   - Mark as Date Table (select Date[Date]).
+   - Sort 'Month Short' by 'Month Number'.
+   - Relate Date[Date] (1) -> Sales[order_date] (*).
+
+--------------------------------------------------------------------------------
+PHASE 2: PAGE LAYOUTS & WIREFRAMES (16:9 Canvas)
+--------------------------------------------------------------------------------
+
+PAGE 1 — EXECUTIVE OVERVIEW
++ Top KPI Ribbon (New Card Visual):
+  - Card 1: Total Sales (₹750.7M) | Subtitle: [Sales KPI Subtitle] ("▲ +14.2% vs LY")
+  - Card 2: Total Profit (₹169.4M) | Subtitle: [Profit KPI Subtitle] ("▲ +11.8% vs LY")
+  - Card 3: Profit Margin % (22.6%) | Subtitle: [Margin Health Badge] ("🟢 Healthy")
+  - Card 4: Average Order Value (₹50,045) | Subtitle: [Orders] ("15,000 Orders")
++ Top Slicers: Date[Year] and Sales[channel]
++ Monthly Sales & Profit Trend (Line and Stacked Column / Area):
+  - X-Axis: Date[Year Month]
+  - Line Y-Axis: [Total Sales] (Cyan #38BDF8 with glowing data markers)
+  - Column Y-Axis: [Total Profit] (Emerald #10B981)
++ Category Breakdown (Clustered Bar Chart):
+  - Y-Axis: Sales[category]
+  - X-Axis: [Total Sales] (Data labels enabled, formatted in ₹M)
++ Channel Breakdown (Donut Chart):
+  - Legend: Sales[channel] | Values: [Total Sales] (Online ~60% vs Store ~40%)
+
+PAGE 2 — PRODUCT & MARGIN DEEP DIVE
++ Sales vs. Profit Margin Matrix (Scatter Plot):
+  - X-Axis: [Total Sales]
+  - Y-Axis: [Profit Margin %]
+  - Size: [Units Sold] | Details: Sales[product]
+  - Actionable: Instantly flags high-revenue products with sub-18% margins!
++ Top 10 Products by Sales (Horizontal Bar Chart):
+  - Conditional Bar Color: Field Value -> [Color_Margin_Status]
++ Low-Margin Alert Table:
+  - Columns: product, category, Total Sales, Total Profit, Profit Margin %, Average Discount %
+  - Filter: [Profit Margin %] < 0.18 with conditional formatting on discount %
+
+PAGE 3 — CUSTOMER & CHANNEL DYNAMICS
++ Channel Comparison (Clustered Column Chart):
+  - X-Axis: Sales[channel] | Y-Axis: [Total Sales], [Total Profit]
++ Payment Mode Analysis (Treemap / Donut):
+  - Category: Sales[payment_mode] | Values: [Total Sales]
++ Customer Concentration Pareto (Table):
+  - Columns: customer_id, Total Orders, Total Sales, Total Profit, AOV
+
+PAGE 4 — REGIONAL GEOGRAPHY & DRILL-THROUGH
++ State-Level Performance (Filled Map / Shape Map or Matrix):
+  - Location: Sales[state] | Color saturation: [Total Sales]
++ Regional KPI Cards: North, South, West, East breakdown
++ Drill-Through Page ('City Drillthrough'):
+  - Enable drill-through on Sales[state] to explore city-level metrics.
+
+--------------------------------------------------------------------------------
+PHASE 3: INTERACTIVE PRO FEATURES
+--------------------------------------------------------------------------------
+1. Interactive Tooltip Page:
+   - Create 320x240px tooltip page 'Tooltip_ProductPreview' showing top 3 products.
+   - Attach to Category visual on Page 1 for instant hover insights.
+2. Bookmark Slicer Reset:
+   - Create bookmark 'ResetFilters' and attach to a "↺ Reset Filters" button.
+3. Dynamic Metric Selector:
+   - Use [Selected Metric Value] to dynamically toggle visuals between Sales/Profit/Margin.
+
+--------------------------------------------------------------------------------
+PHASE 4: PORTFOLIO ASSETS
+--------------------------------------------------------------------------------
+- Export high-resolution screenshots to 'outputs/charts/'.
+- Reference mockup available at 'outputs/charts/powerbi_dashboard_preview.jpg'.
+================================================================================

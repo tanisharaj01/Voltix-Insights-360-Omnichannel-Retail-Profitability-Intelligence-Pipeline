@@ -1,10 +1,10 @@
-# 📊 Voltix Insights — Power BI Dashboard Build Guide
+# Voltix Insights — Power BI Dashboard Build Guide
 **Project:** 360° Omnichannel Retail & Profitability Intelligence Pipeline  
 **Theme:** Executive Dark Slate & Electric Cyan/Emerald  
 
 ---
 
-## 🎨 Phase 1: Environment & Theme Setup
+## Phase 1: Environment & Theme Setup
 
 ### 1. Data Ingestion
 1. Open **Power BI Desktop**.
@@ -31,11 +31,11 @@
 
 ---
 
-## 📐 Phase 2: Page-by-Page Visual Wireframes
+## Phase 2: Page-by-Page Visual Wireframes
 
 ```
 +-----------------------------------------------------------------------------------------------+
-|  HEADER: 📈 Executive Sales Insights Dashboard            | [Year Slicer] [Channel Slicer]   |
+|  HEADER: Executive Sales Insights Dashboard            | [Year Slicer] [Channel Slicer]   |
 +-----------------------------------------------------------------------------------------------+
 | [ Total Sales ]       | [ Total Profit ]      | [ Profit Margin % ]   | [ Average Order Val ] |
 | ₹750.7M (▲ +14.2%)    | ₹169.4M (▲ +11.8%)    | 22.6% (🟢 Healthy)    | ₹50,045 (▲ +2.1%)     |
@@ -127,7 +127,7 @@
 
 ---
 
-## 🚀 Phase 3: Modern Polish & Pro-Features
+## Phase 3: Modern Polish & Pro-Features
 
 ### 1. Interactive Tooltip Page (Hover Details)
 1. Add a new page named **`Tooltip_ProductPreview`**.
@@ -142,12 +142,3 @@
 2. Go to **View** $\rightarrow$ **Bookmarks** $\rightarrow$ Click **Add Bookmark** $\rightarrow$ Name it `ResetFilters`.
 3. Insert **Button** $\rightarrow$ Blank / Icon $\rightarrow$ Set Text: `"↺ Reset Filters"`.
 4. Action: **Bookmark** $\rightarrow$ Select `ResetFilters`.
-
----
-
-## 📸 Phase 4: Portfolio Screenshots
-
-Once built:
-1. Export high-resolution screenshots (`File -> Export -> Export to PDF` or Windows Snipping Tool `Win + Shift + S`).
-2. Save your screenshots to `outputs/charts/`.
-3. Link them in your GitHub `README.md` to showcase your visualization work directly to recruiters!
